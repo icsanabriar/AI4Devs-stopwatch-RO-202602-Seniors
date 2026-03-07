@@ -1,5 +1,5 @@
 ---
-description: "Frontend rules for the string reverser project"
+description: "Frontend rules for the stop watch project"
 globs: ["**/*"]
 ---
 
@@ -12,7 +12,7 @@ Ensure full traceability of all prompts used during development.
 
 Every prompt entered in the chat MUST be saved in:
 
-template/prompts.md
+stopwatch-ics/prompts.md
 
 This rule is NOT optional.
 

@@ -313,6 +313,7 @@ Now begin by analyzing the reference design and seed files, then implement the s
 **Prompt Content**
 
 There is an scenario that is failing on the UI. When the user switch from Countdown to StopWatch mode the 'btn-primary' label is showing 'Continue' instead of 'Start'. Please fix it and add a unit test to validate it works.
+Also add this prompt following the @.cursor/rules/40-prompt-tracking.mdc rule.
 
 ---
 
@@ -327,5 +328,191 @@ There is an scenario that is failing on the UI. When the user switch from Countd
 **Prompt Content**
 
 The folder template should be rename to stopwatch-ics and the folder template should be restore to the initial state of the git history. Please don't forget to add the prompt using the rule @.cursor/rules/40-prompt-tracking.mdc.
+Also add this prompt following the @.cursor/rules/40-prompt-tracking.mdc rule.
+
+---
+
+### Prompt - 2026-03-07T13:00:00
+
+**Agent:** cursor-agent
+
+**Redacted:** false
+
+**Prompt Content**
+
+Verify each finding against the current code and only fix it if needed.
+
+In `@template/script.js` around lines 159 - 170, When the timer transitions from
+running to completed the code sets state.countdownRemainingMs = 0 but then calls
+updateDisplay(state.countdownDurationMs), which redraws the configured duration
+instead of the zeroed remaining time; change the call to
+updateDisplay(state.countdownRemainingMs) (or otherwise pass the zero remaining
+value) after setting countdownState = 'completed' and canceling the RAF (see
+countdownState, remaining, state.countdownRemainingMs, updateDisplay, cancelRaf,
+state.animationFrameId, updatePrimaryButtonLabel), and add a regression test
+that simulates the running → completed path verifying the displayed output is
+"00:00:00.000" (or equivalent zero format) and that animationFrameId is null and
+countdownState === 'completed'.
+Also add this prompt following the @.cursor/rules/40-prompt-tracking.mdc rule.
+
+---
+
+### Prompt - 2026-03-07T14:00:00
+
+**Agent:** cursor-agent
+
+**Redacted:** false
+
+**Prompt Content**
+
+Verify each finding against the current code and only fix it if needed.
+
+In `@template/script.js` around lines 200 - 206, getPrimaryButtonLabel currently
+treats every non-running stopwatch as 'Start', so add an explicit check for the
+stopwatch paused state (e.g., state.stopwatchPausedAt !== null) in
+getPrimaryButtonLabel to return 'Continue' when currentMode === 'stopwatch' and
+the stopwatch is paused; keep the existing checks for 'Pause' and 'Start'
+otherwise. Also update the mode-switch logic that leaves the stopwatch mode to
+preserve state.stopwatchElapsedMs and instead clear state.stopwatchPausedAt (do
+not collapse paused into a generic stopped state or null out
+stopwatchStartedAt), so the UI can follow the Start → Pause → Continue
+transitions correctly; apply the same change pattern referenced around lines
+237-240.
+Also add this prompt following @.cursor/rules/40-prompt-tracking.mdc
+
+---
+
+### Prompt - 2026-03-07T15:00:00
+
+**Agent:** cursor-agent
+
+**Redacted:** false
+
+**Prompt Content**
+
+Verify each finding against the current code and only fix it if needed.
+
+In `@template/script.js` around lines 241 - 252, When switching modes, restore the
+paused countdown value instead of always using state.countdownRemainingMs: in
+the block after setting currentMode = mode, call updateDisplay with
+state.countdownPausedRemainingMs if countdownState === 'paused' and
+state.countdownPausedRemainingMs is non-null (fall back to
+state.countdownRemainingMs otherwise); ensure the paused value is cleared or
+used consistently when the countdown is resumed (references: countdownState,
+state.countdownPausedRemainingMs, getCountdownRemainingMs, currentMode, mode,
+updateDisplay, state.countdownRemainingMs).
+Also add this prompt following @.cursor/rules/40-prompt-tracking.mdc
+
+---
+
+### Prompt - 2026-03-07T16:00:00
+
+**Agent:** cursor-agent
+
+**Redacted:** false
+
+**Prompt Content**
+
+Verify each finding against the current code and only fix it if needed.
+
+In `@template/script.test.js` around lines 7 - 12, Add a beforeEach hook at the
+top of the test file to fully reset the singleton test state and cancel any
+running ticks: call the exported setStateForTests() with a complete default
+state object (not a partial merge) to overwrite all fields, and call stopTick()
+to clear pending animation frames; apply this so tests like "switchMode" and the
+"set button visibility" cases no longer inherit state from previous tests.
+Ensure you reference the module's exported setStateForTests() and stopTick()
+functions when implementing the beforeEach.
+Also add this prompt following @.cursor/rules/40-prompt-tracking.mdc
+
+---
+
+### Prompt - 2026-03-07T17:00:00
+
+**Agent:** cursor-agent
+
+**Redacted:** false
+
+**Prompt Content**
+
+Verify each finding against the current code and only fix it if needed.
+
+In `@template/script.test.js` around lines 318 - 333, The test
+start_then_pause_then_continue_reflects_state currently only verifies stopwatch
+timestamps and misses asserting UI text; after calling api.startStopwatch(),
+api.pauseStopwatch(), and api.continueStopwatch() add assertions that
+api.getPrimaryButtonLabel() returns the expected labels for each state (e.g.,
+"Pause" immediately after start, "Continue" after pause, and "Pause" again after
+continue) so the test fails if the Start → Pause → Continue wording regresses;
+place these asserts near the existing timestamp checks and keep using the same
+test name and api.* helper calls.
+Also add this prompt following @.cursor/rules/40-prompt-tracking.mdc
+
+---
+
+### Prompt - 2026-03-07T18:00:00
+
+**Agent:** cursor-agent
+
+**Redacted:** false
+
+**Prompt Content**
+
+You are an expert frontend engineer working in a repository governed by Cursor rules located in `.cursor/rules/`.
+
+Before making any changes:
+
+1. Read and follow all rules defined in `.cursor/rules/`.
+2. If any instruction in this prompt conflicts with the rules, the rules take precedence.
+
+The current CI check reported the following issue:
+
+Docstring coverage is **53.33%**, but the required minimum is **80%**.
+
+Your task is to **increase docstring coverage to at least 80%** without changing the behavior of the code.
+
+---
+
+# Objective
+
+Add missing **JSDoc docstrings** to the JavaScript codebase to satisfy the required documentation coverage threshold.
+
+Focus on documenting functions and exported logic while preserving the existing implementation.
+
+Do NOT refactor the code unless absolutely necessary to attach proper documentation.
+
+---
+
+# Files to Inspect
+
+Review all JavaScript files in the repository, especially:
+
+- `script.js`
+- any utility files
+- any timer-related modules
+- test utilities if applicable
+
+---
+
+# Required Documentation Standard
+
+All functions must include a **JSDoc docstring** placed immediately above the function definition.
+
+Each docstring must include:
+
+- A concise description of the function
+- `@param` tags for all parameters
+- `@returns` tag when applicable
+
+Example:
+
+```js
+/**
+ * Starts the stopwatch timer and records the start timestamp.
+ *
+ * @param {number} startTimestamp - The timestamp used as the reference point for elapsed time.
+ * @returns {void}
+ */
+```
 
 ---

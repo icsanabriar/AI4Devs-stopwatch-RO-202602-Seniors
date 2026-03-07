@@ -109,6 +109,7 @@
   /**
    * Updates the on-screen time display (main + ms).
    * @param {number} ms - Time to show in milliseconds (non-negative for display).
+   * @returns {void}
    */
   function updateDisplay(ms) {
     var displayMs = Math.max(0, ms);
@@ -149,6 +150,7 @@
 
   /**
    * Tick: update display and schedule next frame. Stops at countdown zero.
+   * @returns {void}
    */
   function tick() {
     if (currentMode === 'stopwatch') {
@@ -166,7 +168,7 @@
           state.animationFrameId = null;
         }
         updatePrimaryButtonLabel();
-        updateDisplay(state.countdownDurationMs);
+        updateDisplay(state.countdownRemainingMs);
         return;
       }
     }
@@ -175,6 +177,7 @@
 
   /**
    * Starts the tick loop (one active loop only).
+   * @returns {void}
    */
   function startTick() {
     if (state.animationFrameId !== null) return;
@@ -183,6 +186,7 @@
 
   /**
    * Stops the tick loop.
+   * @returns {void}
    */
   function stopTick() {
     if (state.animationFrameId !== null) {
@@ -199,7 +203,9 @@
    */
   function getPrimaryButtonLabel() {
     if (currentMode === 'stopwatch') {
-      return state.stopwatchStartedAt !== null ? 'Pause' : 'Start';
+      if (state.stopwatchStartedAt !== null) return 'Pause';
+      if (state.stopwatchPausedAt !== null || state.stopwatchElapsedMs > 0) return 'Continue';
+      return 'Start';
     }
     if (countdownState === 'running') return 'Pause';
     if (countdownState === 'paused') return 'Continue';
@@ -208,6 +214,7 @@
 
   /**
    * Updates primary button label based on mode and state.
+   * @returns {void}
    */
   function updatePrimaryButtonLabel() {
     var btn = elements.btnPrimary;
@@ -220,6 +227,7 @@
 
   /**
    * Shows or hides the Set section and Set button based on mode.
+   * @returns {void}
    */
   function updateSetVisibility() {
     var section = elements.countdownSetSection;
@@ -230,13 +238,16 @@
 
   /**
    * Switches mode; pauses any running timer and preserves per-mode values.
+   * @param {'stopwatch'|'countdown'} mode - The mode to switch to.
+   * @returns {void}
    */
   function switchMode(mode) {
     if (mode === currentMode) return;
     stopTick();
     if (currentMode === 'stopwatch') {
-      state.stopwatchPausedAt = state.stopwatchStartedAt !== null ? getStopwatchElapsedMs() : state.stopwatchElapsedMs;
-      state.stopwatchStartedAt = null;
+      state.stopwatchElapsedMs = getStopwatchElapsedMs();
+      state.stopwatchPausedAt = null;
+      if (state.stopwatchStartedAt !== null) state.stopwatchStartedAt = null;
     } else {
       if (countdownState === 'running' || countdownState === 'paused') {
         state.countdownPausedRemainingMs = getCountdownRemainingMs();
@@ -248,7 +259,10 @@
     if (mode === 'stopwatch') {
       updateDisplay(getStopwatchElapsedMs());
     } else {
-      updateDisplay(state.countdownRemainingMs);
+      var countdownDisplayMs = (countdownState === 'paused' && state.countdownPausedRemainingMs != null)
+        ? state.countdownPausedRemainingMs
+        : state.countdownRemainingMs;
+      updateDisplay(countdownDisplayMs);
     }
     updatePrimaryButtonLabel();
     updateSetVisibility();
@@ -257,6 +271,7 @@
 
   /**
    * Updates mode tab active state and ARIA.
+   * @returns {void}
    */
   function updateModeTabs() {
     if (!hasDocument) return;
@@ -268,6 +283,10 @@
     });
   }
 
+  /**
+   * Starts the stopwatch from zero or from the current paused elapsed time.
+   * @returns {void}
+   */
   function startStopwatch() {
     if (state.stopwatchStartedAt !== null) return;
     state.stopwatchElapsedMs = state.stopwatchPausedAt !== null ? state.stopwatchPausedAt : state.stopwatchElapsedMs;
@@ -277,6 +296,10 @@
     startTick();
   }
 
+  /**
+   * Pauses the stopwatch and stores the current elapsed time.
+   * @returns {void}
+   */
   function pauseStopwatch() {
     if (state.stopwatchStartedAt === null) return;
     state.stopwatchElapsedMs = getStopwatchElapsedMs();
@@ -287,6 +310,10 @@
     updatePrimaryButtonLabel();
   }
 
+  /**
+   * Resumes the stopwatch from the paused elapsed time.
+   * @returns {void}
+   */
   function continueStopwatch() {
     if (state.stopwatchStartedAt !== null) return;
     state.stopwatchElapsedMs = state.stopwatchPausedAt !== null ? state.stopwatchPausedAt : state.stopwatchElapsedMs;
@@ -296,6 +323,10 @@
     startTick();
   }
 
+  /**
+   * Clears the stopwatch to zero and stops the tick loop.
+   * @returns {void}
+   */
   function clearStopwatch() {
     stopTick();
     state.stopwatchElapsedMs = 0;
@@ -305,6 +336,10 @@
     updatePrimaryButtonLabel();
   }
 
+  /**
+   * Starts the countdown from the configured or remaining duration.
+   * @returns {void}
+   */
   function startCountdown() {
     if (countdownState === 'running') return;
     if (!isValidCountdownDuration(state.countdownDurationMs)) return;
@@ -317,6 +352,10 @@
     startTick();
   }
 
+  /**
+   * Pauses the countdown and stores the remaining time.
+   * @returns {void}
+   */
   function pauseCountdown() {
     if (countdownState !== 'running') return;
     state.countdownPausedRemainingMs = getCountdownRemainingMs();
@@ -328,6 +367,10 @@
     updatePrimaryButtonLabel();
   }
 
+  /**
+   * Resumes the countdown from the paused remaining time.
+   * @returns {void}
+   */
   function continueCountdown() {
     if (countdownState !== 'paused') return;
     state.countdownRemainingMs = state.countdownPausedRemainingMs !== null ? state.countdownPausedRemainingMs : state.countdownRemainingMs;
@@ -337,6 +380,10 @@
     startTick();
   }
 
+  /**
+   * Clears the countdown to the configured duration and stops the tick loop.
+   * @returns {void}
+   */
   function clearCountdown() {
     stopTick();
     state.countdownRemainingMs = state.countdownDurationMs;
@@ -347,6 +394,10 @@
     updatePrimaryButtonLabel();
   }
 
+  /**
+   * Applies the countdown duration from the HH/MM/SS inputs and resets countdown to idle.
+   * @returns {void}
+   */
   function applySetCountdown() {
     var h = parseInt(elements.inputHours.value, 10) || 0;
     var m = parseInt(elements.inputMinutes.value, 10) || 0;
@@ -363,6 +414,10 @@
     updatePrimaryButtonLabel();
   }
 
+  /**
+   * Handles click on the primary button (Start / Pause / Continue).
+   * @returns {void}
+   */
   function handlePrimaryClick() {
     if (currentMode === 'stopwatch') {
       if (state.stopwatchStartedAt !== null) {
@@ -383,6 +438,10 @@
     }
   }
 
+  /**
+   * Handles click on the Clear button; clears stopwatch or countdown depending on mode.
+   * @returns {void}
+   */
   function handleClearClick() {
     if (currentMode === 'stopwatch') {
       clearStopwatch();
@@ -391,6 +450,10 @@
     }
   }
 
+  /**
+   * Caches DOM element references used by the timer UI.
+   * @returns {void}
+   */
   function cacheElements() {
     elements.timeMain = document.getElementById('time-main');
     elements.timeMs = document.getElementById('time-ms');
@@ -403,6 +466,10 @@
     elements.btnSet = document.getElementById('btn-set');
   }
 
+  /**
+   * Binds click and other event listeners to timer controls.
+   * @returns {void}
+   */
   function bindEvents() {
     if (elements.btnPrimary) elements.btnPrimary.addEventListener('click', handlePrimaryClick);
     if (elements.btnClear) elements.btnClear.addEventListener('click', handleClearClick);
@@ -415,6 +482,10 @@
     });
   }
 
+  /**
+   * Initializes the timer app: caches elements, binds events, and updates display and UI state.
+   * @returns {void}
+   */
   function init() {
     cacheElements();
     bindEvents();
@@ -457,6 +528,7 @@
       switchMode: switchMode,
       stopTick: stopTick,
       getPrimaryButtonLabel: getPrimaryButtonLabel,
+      /** @param {Object} s - Partial or full state to merge; overwrites provided fields. @returns {void} */
       setStateForTests: function (s) {
         state.stopwatchElapsedMs = s.stopwatchElapsedMs != null ? s.stopwatchElapsedMs : state.stopwatchElapsedMs;
         state.stopwatchStartedAt = s.stopwatchStartedAt !== undefined ? s.stopwatchStartedAt : state.stopwatchStartedAt;
@@ -465,9 +537,14 @@
         state.countdownRemainingMs = s.countdownRemainingMs != null ? s.countdownRemainingMs : state.countdownRemainingMs;
         state.countdownStartedAt = s.countdownStartedAt !== undefined ? s.countdownStartedAt : state.countdownStartedAt;
         state.countdownPausedRemainingMs = s.countdownPausedRemainingMs !== undefined ? s.countdownPausedRemainingMs : state.countdownPausedRemainingMs;
+        if (s.animationFrameId !== undefined) state.animationFrameId = s.animationFrameId;
       },
+      tick: tick,
+      /** @param {'idle'|'running'|'paused'|'completed'} s - Countdown state. @returns {void} */
       setCountdownStateForTests: function (s) { countdownState = s; },
+      /** @param {'stopwatch'|'countdown'} m - Current mode. @returns {void} */
       setCurrentModeForTests: function (m) { currentMode = m; },
+      /** @param {number} ms - Valid countdown duration in ms. @returns {void} */
       setCountdownDurationMsForTests: function (ms) {
         if (!isValidCountdownDuration(ms)) return;
         state.countdownDurationMs = ms;
