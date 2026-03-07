@@ -10,6 +10,7 @@
 
 **Prompt Content**
 
+```text
 You are an expert frontend engineer working in a repository governed by Cursor rules located in `.cursor/rules/`.
 
 Before implementing anything:
@@ -303,6 +304,7 @@ Before finishing ensure:
 - UI matches `res/stopwatch.png`
 
 Now begin by analyzing the reference design and seed files, then implement the solution.
+```
 
 ---
 
@@ -314,8 +316,10 @@ Now begin by analyzing the reference design and seed files, then implement the s
 
 **Prompt Content**
 
+```text
 There is an scenario that is failing on the UI. When the user switch from Countdown to StopWatch mode the 'btn-primary' label is showing 'Continue' instead of 'Start'. Please fix it and add a unit test to validate it works.
 Also add this prompt following the @.cursor/rules/40-prompt-tracking.mdc rule.
+```
 
 ---
 
@@ -327,8 +331,10 @@ Also add this prompt following the @.cursor/rules/40-prompt-tracking.mdc rule.
 
 **Prompt Content**
 
+```text
 The folder template should be rename to stopwatch-ics and the folder template should be restore to the initial state of the git history. Please don't forget to add the prompt using the rule @.cursor/rules/40-prompt-tracking.mdc.
 Also add this prompt following the @.cursor/rules/40-prompt-tracking.mdc rule.
+```
 
 ---
 
@@ -340,6 +346,7 @@ Also add this prompt following the @.cursor/rules/40-prompt-tracking.mdc rule.
 
 **Prompt Content**
 
+```text
 Verify each finding against the current code and only fix it if needed.
 
 In `@template/script.js` around lines 159 - 170, When the timer transitions from
@@ -354,6 +361,7 @@ that simulates the running → completed path verifying the displayed output is
 "00:00:00.000" (or equivalent zero format) and that animationFrameId is null and
 countdownState === 'completed'.
 Also add this prompt following the @.cursor/rules/40-prompt-tracking.mdc rule.
+```
 
 ---
 
@@ -365,6 +373,7 @@ Also add this prompt following the @.cursor/rules/40-prompt-tracking.mdc rule.
 
 **Prompt Content**
 
+```text
 Verify each finding against the current code and only fix it if needed.
 
 In `@template/script.js` around lines 200 - 206, getPrimaryButtonLabel currently
@@ -379,6 +388,7 @@ stopwatchStartedAt), so the UI can follow the Start → Pause → Continue
 transitions correctly; apply the same change pattern referenced around lines
 237-240.
 Also add this prompt following @.cursor/rules/40-prompt-tracking.mdc
+```
 
 ---
 
@@ -390,6 +400,7 @@ Also add this prompt following @.cursor/rules/40-prompt-tracking.mdc
 
 **Prompt Content**
 
+```text
 Verify each finding against the current code and only fix it if needed.
 
 In `@template/script.js` around lines 241 - 252, When switching modes, restore the
@@ -402,6 +413,7 @@ used consistently when the countdown is resumed (references: countdownState,
 state.countdownPausedRemainingMs, getCountdownRemainingMs, currentMode, mode,
 updateDisplay, state.countdownRemainingMs).
 Also add this prompt following @.cursor/rules/40-prompt-tracking.mdc
+```
 
 ---
 
@@ -413,6 +425,7 @@ Also add this prompt following @.cursor/rules/40-prompt-tracking.mdc
 
 **Prompt Content**
 
+```text
 Verify each finding against the current code and only fix it if needed.
 
 In `@template/script.test.js` around lines 7 - 12, Add a beforeEach hook at the
@@ -424,6 +437,7 @@ to clear pending animation frames; apply this so tests like "switchMode" and the
 Ensure you reference the module's exported setStateForTests() and stopTick()
 functions when implementing the beforeEach.
 Also add this prompt following @.cursor/rules/40-prompt-tracking.mdc
+```
 
 ---
 
@@ -435,6 +449,7 @@ Also add this prompt following @.cursor/rules/40-prompt-tracking.mdc
 
 **Prompt Content**
 
+```text
 Verify each finding against the current code and only fix it if needed.
 
 In `@template/script.test.js` around lines 318 - 333, The test
@@ -447,6 +462,7 @@ continue) so the test fails if the Start → Pause → Continue wording regresse
 place these asserts near the existing timestamp checks and keep using the same
 test name and api.* helper calls.
 Also add this prompt following @.cursor/rules/40-prompt-tracking.mdc
+```
 
 ---
 
@@ -458,6 +474,7 @@ Also add this prompt following @.cursor/rules/40-prompt-tracking.mdc
 
 **Prompt Content**
 
+```text
 You are an expert frontend engineer working in a repository governed by Cursor rules located in `.cursor/rules/`.
 
 Before making any changes:
@@ -514,6 +531,7 @@ Example:
  * @returns {void}
  */
 ```
+```
 
 ---
 
@@ -525,6 +543,7 @@ Example:
 
 **Prompt Content**
 
+```text
 Verify each finding against the current code and only fix it if needed.
 
 In `@stopwatch-ics/script.js` around lines 244 - 245, Add an explicit guard in the
@@ -536,6 +555,7 @@ any helper like currentMode) to reject invalid strings so currentMode cannot be
 set to an unsupported value and downstream logic won't assume countdown
 behavior.
 Also add this prompt following @.cursor/rules/40-prompt-tracking.mdc
+```
 
 ---
 
@@ -547,6 +567,7 @@ Also add this prompt following @.cursor/rules/40-prompt-tracking.mdc
 
 **Prompt Content**
 
+```text
 Verify each finding against the current code and only fix it if needed.
 
 In `@stopwatch-ics/script.js` around lines 401 - 405, The applySetCountdown
@@ -559,5 +580,56 @@ elements.inputHours/inputMinutes/inputSeconds are undefined), so callers in
 non-DOM environments fail gracefully instead of throwing; reference
 applySetCountdown and the cacheElements/elements symbols when making the change.
 Also add this prompt following @.cursor/rules/40-prompt-tracking.mdc
+```
+
+---
+
+## Prompt - 2026-03-07T21:00:00
+
+**Agent:** cursor-agent
+
+**Redacted:** false
+
+**Prompt Content**
+
+```text
+Verify each finding against the current code and only fix it if needed.
+
+In @.cursor/rules/40-prompt-tracking.mdc around lines 48 - 68, Update the
+"Prompt Content" entry format so the prompt body is stored as a fenced literal
+block instead of raw Markdown: modify the section under the "## Prompt -
+YYYY-MM-DDTHH:MM:SS" / "**Prompt Content**" headings to wrap the original prompt
+text inside a triple-backtick fenced block (e.g., ```text ... ``` ) so embedded
+headings, code fences, or horizontal rules never get parsed as document
+structure; ensure the rule text and the example in
+.cursor/rules/40-prompt-tracking.mdc explicitly show the fenced block usage and
+include a note that redactions (if any) remain inside that literal block.
+Also add this prompt following @.cursor/rules/40-prompt-tracking.mdc
+```
+
+---
+
+## Prompt - 2026-03-07T22:00:00
+
+**Agent:** cursor-agent
+
+**Redacted:** false
+
+**Prompt Content**
+
+```text
+Verify each finding against the current code and only fix it if needed.
+
+In `@stopwatch-ics/script.js` around lines 291 - 297, The exported lifecycle
+helpers (e.g., startStopwatch) must be guarded by the active mode like
+handlePrimaryClick does: check the current mode (the same mode variable
+handlePrimaryClick enforces) at the top of each helper and return immediately if
+the helper's mode isn't the active one, so callers cannot start or resume an
+inactive timer; apply the same guard to the corresponding pause/resume/reset
+helpers (those manipulating state.stopwatchStartedAt, state.stopwatchPausedAt,
+calling startTick(), updatePrimaryButtonLabel(), etc.) and mirror the same check
+for the timer-side helpers so only the active mode can drive its RAF loop.
+Also add this prompt following @.cursor/rules/40-prompt-tracking.mdc
+```
 
 ---

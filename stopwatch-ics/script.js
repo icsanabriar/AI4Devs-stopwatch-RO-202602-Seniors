@@ -286,9 +286,11 @@
 
   /**
    * Starts the stopwatch from zero or from the current paused elapsed time.
+   * No-op when current mode is not stopwatch.
    * @returns {void}
    */
   function startStopwatch() {
+    if (currentMode !== 'stopwatch') return;
     if (state.stopwatchStartedAt !== null) return;
     state.stopwatchElapsedMs = state.stopwatchPausedAt !== null ? state.stopwatchPausedAt : state.stopwatchElapsedMs;
     state.stopwatchPausedAt = null;
@@ -299,9 +301,11 @@
 
   /**
    * Pauses the stopwatch and stores the current elapsed time.
+   * No-op when current mode is not stopwatch.
    * @returns {void}
    */
   function pauseStopwatch() {
+    if (currentMode !== 'stopwatch') return;
     if (state.stopwatchStartedAt === null) return;
     state.stopwatchElapsedMs = getStopwatchElapsedMs();
     state.stopwatchStartedAt = null;
@@ -313,9 +317,11 @@
 
   /**
    * Resumes the stopwatch from the paused elapsed time.
+   * No-op when current mode is not stopwatch.
    * @returns {void}
    */
   function continueStopwatch() {
+    if (currentMode !== 'stopwatch') return;
     if (state.stopwatchStartedAt !== null) return;
     state.stopwatchElapsedMs = state.stopwatchPausedAt !== null ? state.stopwatchPausedAt : state.stopwatchElapsedMs;
     state.stopwatchPausedAt = null;
@@ -326,9 +332,11 @@
 
   /**
    * Clears the stopwatch to zero and stops the tick loop.
+   * No-op when current mode is not stopwatch.
    * @returns {void}
    */
   function clearStopwatch() {
+    if (currentMode !== 'stopwatch') return;
     stopTick();
     state.stopwatchElapsedMs = 0;
     state.stopwatchStartedAt = null;
@@ -339,9 +347,11 @@
 
   /**
    * Starts the countdown from the configured or remaining duration.
+   * No-op when current mode is not countdown.
    * @returns {void}
    */
   function startCountdown() {
+    if (currentMode !== 'countdown') return;
     if (countdownState === 'running') return;
     if (!isValidCountdownDuration(state.countdownDurationMs)) return;
     if (countdownState === 'idle' || countdownState === 'completed') {
@@ -355,9 +365,11 @@
 
   /**
    * Pauses the countdown and stores the remaining time.
+   * No-op when current mode is not countdown.
    * @returns {void}
    */
   function pauseCountdown() {
+    if (currentMode !== 'countdown') return;
     if (countdownState !== 'running') return;
     state.countdownPausedRemainingMs = getCountdownRemainingMs();
     state.countdownRemainingMs = state.countdownPausedRemainingMs;
@@ -370,9 +382,11 @@
 
   /**
    * Resumes the countdown from the paused remaining time.
+   * No-op when current mode is not countdown.
    * @returns {void}
    */
   function continueCountdown() {
+    if (currentMode !== 'countdown') return;
     if (countdownState !== 'paused') return;
     state.countdownRemainingMs = state.countdownPausedRemainingMs !== null ? state.countdownPausedRemainingMs : state.countdownRemainingMs;
     state.countdownStartedAt = performance.now();
@@ -383,9 +397,11 @@
 
   /**
    * Clears the countdown to the configured duration and stops the tick loop.
+   * No-op when current mode is not countdown.
    * @returns {void}
    */
   function clearCountdown() {
+    if (currentMode !== 'countdown') return;
     stopTick();
     state.countdownRemainingMs = state.countdownDurationMs;
     state.countdownStartedAt = null;

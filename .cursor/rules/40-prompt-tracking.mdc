@@ -47,7 +47,7 @@ Each stored prompt entry MUST include:
 
 ## Format
 
-Each entry must follow this structure:
+Each entry must follow this structure. The prompt body MUST be stored as a fenced literal block (e.g. ` ```text ` … ` ``` `) so that embedded headings, code fences, or horizontal rules in the prompt are not parsed as document structure. Redactions (if any) remain inside that literal block.
 
 ---
 
@@ -65,6 +65,8 @@ Redaction Metadata:
 
 **Prompt Content**
 
+```text
 <original prompt text with redactions if required>
+```
 
 ---
