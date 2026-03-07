@@ -6,7 +6,7 @@
 
 **Agent:** cursor-agent
 
-**Redacted:** false
+**redacted_flag:** false
 
 **Prompt Content**
 
@@ -312,7 +312,7 @@ Now begin by analyzing the reference design and seed files, then implement the s
 
 **Agent:** cursor-agent
 
-**Redacted:** false
+**redacted_flag:** false
 
 **Prompt Content**
 
@@ -326,7 +326,7 @@ There is an scenario that is failing on the UI. When the user switch from Countd
 
 **Agent:** cursor-agent
 
-**Redacted:** false
+**redacted_flag:** false
 
 **Prompt Content**
 
@@ -340,7 +340,7 @@ The folder template should be rename to stopwatch-ics and the folder template sh
 
 **Agent:** cursor-agent
 
-**Redacted:** false
+**redacted_flag:** false
 
 **Prompt Content**
 
@@ -366,7 +366,7 @@ countdownState === 'completed'.
 
 **Agent:** cursor-agent
 
-**Redacted:** false
+**redacted_flag:** false
 
 **Prompt Content**
 
@@ -392,7 +392,7 @@ transitions correctly; apply the same change pattern referenced around lines
 
 **Agent:** cursor-agent
 
-**Redacted:** false
+**redacted_flag:** false
 
 **Prompt Content**
 
@@ -416,7 +416,7 @@ updateDisplay, state.countdownRemainingMs).
 
 **Agent:** cursor-agent
 
-**Redacted:** false
+**redacted_flag:** false
 
 **Prompt Content**
 
@@ -439,7 +439,7 @@ functions when implementing the beforeEach.
 
 **Agent:** cursor-agent
 
-**Redacted:** false
+**redacted_flag:** false
 
 **Prompt Content**
 
@@ -463,11 +463,11 @@ test name and api.* helper calls.
 
 **Agent:** cursor-agent
 
-**Redacted:** false
+**redacted_flag:** false
 
 **Prompt Content**
 
-```text
+````text
 You are an expert frontend engineer working in a repository governed by Cursor rules located in `.cursor/rules/`.
 
 Before making any changes:
@@ -524,6 +524,7 @@ Example:
  * @returns {void}
  */
 ```
+````
 
 ---
 
@@ -531,7 +532,7 @@ Example:
 
 **Agent:** cursor-agent
 
-**Redacted:** false
+**redacted_flag:** false
 
 **Prompt Content**
 
@@ -554,7 +555,7 @@ behavior.
 
 **Agent:** cursor-agent
 
-**Redacted:** false
+**redacted_flag:** false
 
 **Prompt Content**
 
@@ -578,7 +579,7 @@ applySetCountdown and the cacheElements/elements symbols when making the change.
 
 **Agent:** cursor-agent
 
-**Redacted:** false
+**redacted_flag:** false
 
 **Prompt Content**
 
@@ -602,7 +603,7 @@ include a note that redactions (if any) remain inside that literal block.
 
 **Agent:** cursor-agent
 
-**Redacted:** false
+**redacted_flag:** false
 
 **Prompt Content**
 
@@ -626,7 +627,7 @@ for the timer-side helpers so only the active mode can drive its RAF loop.
 
 **Agent:** cursor-agent
 
-**Redacted:** false
+**redacted_flag:** false
 
 **Prompt Content**
 
@@ -650,7 +651,7 @@ stopwatch mode.
 
 **Agent:** cursor-agent
 
-**Redacted:** false
+**redacted_flag:** false
 
 **Prompt Content**
 

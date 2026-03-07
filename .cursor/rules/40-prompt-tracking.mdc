@@ -1,53 +1,86 @@
 ---
 description: "Frontend rules for the stop watch project"
 globs: ["**/*"]
+alwaysApply: true
 ---
 
 # Prompt Tracking Rule
 
 ## Purpose
-Ensure full traceability of all prompts used during development.
 
-## Mandatory Rule
+Ensure **complete traceability of all prompts** used by the AI agent during development.
 
-Every prompt entered in the chat MUST be saved in:
+This rule guarantees that every interaction with the AI agent can be audited, reproduced, and reviewed.
 
-stopwatch-ics/prompts.md
+---
 
-This rule is NOT optional.
+# Mandatory Execution Rule
 
-## Requirements
+For **every prompt received by the agent**, the agent MUST perform the following steps **before producing the final answer or modifying any file**:
 
-- If the file does not exist, create it.
-- Append each new prompt at the end of the file.
-- Do NOT overwrite previous prompts.
-- Preserve the original wording of the prompt, with one mandatory exception: **sensitive data MUST be redacted before storage** (e.g. secrets, credentials, personal identifying information).
+1. Record the prompt in the file:
 
-When redacting:
+```text
+  stopwatch-ics/prompts.md
+```
 
-- Use a marker such as `[REDACTED:<type>]`.
-- Record **redaction metadata** including:
-  - redaction reason
-  - redaction timestamp (ISO 8601)
+2. If the file does not exist, **create it automatically**.
 
-Implementations and audits MUST be able to detect when redaction occurred **without storing the secret**.  
-This can be done by including:
+3. Append the prompt entry **at the end of the file**.
 
-- `redacted_flag`
-- `redaction_metadata` (reason + timestamp)
+4. Never modify or overwrite previous prompt entries.
 
-## Metadata Required for Each Prompt
+Failure to record the prompt **violates this rule**.
 
-Each stored prompt entry MUST include:
+---
 
-- Timestamp (ISO 8601)
-- Agent used (e.g. `cursor-agent`, `gpt-5`, `gpt-5-thinking`, etc.)
-- Clear separator between prompts
-- Redaction metadata if redaction occurred
+# Storage Requirements
 
-## Format
+The prompt entry must preserve the **original wording** of the prompt.
 
-Each entry must follow this structure. The prompt body MUST be stored as a fenced literal block (e.g. ` ```text ` … ` ``` `) so that embedded headings, code fences, or horizontal rules in the prompt are not parsed as document structure. Redactions (if any) remain inside that literal block.
+The only allowed modification is **redaction of sensitive data**.
+
+Sensitive information includes:
+
+- API keys
+- tokens
+- passwords
+- credentials
+- personal identifiable information
+- secrets
+
+---
+
+# Redaction Rules
+
+If sensitive information appears in a prompt:
+
+1. Replace it with a marker:
+
+```text
+  [REDACTED:<type>]
+```
+
+2. Record **redaction_metadata** (reason and timestamp in ISO 8601). Set **redacted_flag** to true when redaction occurs.
+
+---
+
+# Required Metadata
+
+Each stored prompt MUST include the following metadata:
+
+- **Timestamp** (ISO 8601)
+- **Agent name** (e.g. `cursor-agent`, `gpt-5`, `gpt-5-thinking`)
+- **redacted_flag** (true | false)
+- **redaction_metadata** (if applicable; contains reason and timestamp)
+
+---
+
+# File Format
+
+Entries must be appended using the following structure.
+
+Prompts must be stored as a **literal fenced block** so that markdown formatting inside the prompt is preserved.
 
 ---
 
@@ -55,13 +88,13 @@ Each entry must follow this structure. The prompt body MUST be stored as a fence
 
 **Agent:** <agent-name>
 
-**Redacted:** true | false
+**redacted_flag:** true | false
 
 (Optional when redacted)
 
-Redaction Metadata:
-- Reason: <reason>
-- Redaction Timestamp: YYYY-MM-DDTHH:MM:SS
+**redaction_metadata:**
+- reason: <reason>
+- timestamp: YYYY-MM-DDTHH:MM:SS
 
 **Prompt Content**
 

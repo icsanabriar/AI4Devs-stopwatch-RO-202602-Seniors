@@ -112,6 +112,16 @@
   }
 
   /**
+   * Announces a status message to assistive tech via the timer-status live region.
+   * Only meaningful events (start, pause, complete, etc.) should call this.
+   * @param {string} message - Message to announce (e.g. "Stopwatch started").
+   * @returns {void}
+   */
+  function updateTimerStatus(message) {
+    if (elements.timerStatus) elements.timerStatus.textContent = message;
+  }
+
+  /**
    * Updates the on-screen time display (main + ms).
    * @param {number} ms - Time to show in milliseconds (non-negative for display).
    * @returns {void}
@@ -174,6 +184,7 @@
         }
         updatePrimaryButtonLabel();
         updateDisplay(state.countdownRemainingMs);
+        updateTimerStatus('Countdown completed');
         return;
       }
     }
@@ -202,14 +213,14 @@
 
   /**
    * Returns the primary button label for current mode and state (for testing).
-   * Stopwatch: running -> 'Pause'; paused or preserved elapsed -> 'Continue'; fresh (zero elapsed) -> 'Start'.
+   * Stopwatch: running -> 'Pause'; paused (stopwatchPausedAt set) -> 'Continue'; otherwise -> 'Start'.
    * Countdown: running -> 'Pause'; paused -> 'Continue'; idle or completed -> 'Start'.
    * @returns {string} 'Start' | 'Pause' | 'Continue'
    */
   function getPrimaryButtonLabel() {
     if (currentMode === 'stopwatch') {
       if (state.stopwatchStartedAt !== null) return 'Pause';
-      if (state.stopwatchPausedAt !== null || state.stopwatchElapsedMs > 0) return 'Continue';
+      if (state.stopwatchPausedAt !== null) return 'Continue';
       return 'Start';
     }
     if (countdownState === 'running') return 'Pause';
@@ -285,7 +296,7 @@
     tabs.forEach(function (tab) {
       var isActive = (tab.getAttribute('data-mode') === currentMode);
       tab.classList.toggle('active', isActive);
-      tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      tab.setAttribute('aria-pressed', isActive ? 'true' : 'false');
     });
   }
 
@@ -301,6 +312,7 @@
     state.stopwatchPausedAt = null;
     state.stopwatchStartedAt = performance.now();
     updatePrimaryButtonLabel();
+    updateTimerStatus('Stopwatch started');
     startTick();
   }
 
@@ -318,6 +330,7 @@
     stopTick();
     updateDisplay(state.stopwatchElapsedMs);
     updatePrimaryButtonLabel();
+    updateTimerStatus('Stopwatch paused');
   }
 
   /**
@@ -332,6 +345,7 @@
     state.stopwatchPausedAt = null;
     state.stopwatchStartedAt = performance.now();
     updatePrimaryButtonLabel();
+    updateTimerStatus('Stopwatch resumed');
     startTick();
   }
 
@@ -348,6 +362,7 @@
     state.stopwatchPausedAt = null;
     updateDisplay(0);
     updatePrimaryButtonLabel();
+    updateTimerStatus('Stopwatch cleared');
   }
 
   /**
@@ -365,6 +380,7 @@
     state.countdownStartedAt = performance.now();
     countdownState = 'running';
     updatePrimaryButtonLabel();
+    updateTimerStatus('Countdown started');
     startTick();
   }
 
@@ -383,6 +399,7 @@
     stopTick();
     updateDisplay(state.countdownRemainingMs);
     updatePrimaryButtonLabel();
+    updateTimerStatus('Countdown paused');
   }
 
   /**
@@ -397,6 +414,7 @@
     state.countdownStartedAt = performance.now();
     countdownState = 'running';
     updatePrimaryButtonLabel();
+    updateTimerStatus('Countdown resumed');
     startTick();
   }
 
@@ -414,6 +432,7 @@
     countdownState = 'idle';
     updateDisplay(state.countdownDurationMs);
     updatePrimaryButtonLabel();
+    updateTimerStatus('Countdown cleared');
   }
 
   /**
@@ -446,7 +465,7 @@
     if (currentMode === 'stopwatch') {
       if (state.stopwatchStartedAt !== null) {
         pauseStopwatch();
-      } else if (state.stopwatchPausedAt !== null || state.stopwatchElapsedMs > 0) {
+      } else if (state.stopwatchPausedAt !== null) {
         continueStopwatch();
       } else {
         startStopwatch();
@@ -481,6 +500,7 @@
   function cacheElements() {
     elements.timeMain = document.getElementById('time-main');
     elements.timeMs = document.getElementById('time-ms');
+    elements.timerStatus = document.getElementById('timer-status');
     elements.btnPrimary = document.getElementById('btn-primary');
     elements.btnClear = document.getElementById('btn-clear');
     elements.countdownSetSection = document.getElementById('countdown-set-section');

@@ -126,7 +126,7 @@ describe('Timer', function () {
     it('should_pause_stopwatch_when_pause_is_called', function () {
       api.setStateForTests({
         stopwatchElapsedMs: 0,
-        stopwatchStartedAt: 1000,
+        stopwatchStartedAt: performance.now() - 1000,
         stopwatchPausedAt: null
       });
       api.setCurrentModeForTests('stopwatch');

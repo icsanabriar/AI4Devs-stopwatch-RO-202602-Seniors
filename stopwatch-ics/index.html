@@ -10,16 +10,17 @@
   <main class="timer-app" role="main" aria-label="Stopwatch and Countdown Timer">
     <h1>Timer and Countdown</h1>
 
-    <div class="mode-tabs" role="tablist" aria-label="Timer mode">
-      <button type="button" class="mode-tab active" role="tab" aria-selected="true" data-mode="stopwatch" id="tab-stopwatch">Stopwatch</button>
-      <button type="button" class="mode-tab" role="tab" aria-selected="false" data-mode="countdown" id="tab-countdown">Countdown</button>
+    <div class="mode-tabs" role="group" aria-label="Timer mode">
+      <button type="button" class="mode-tab active" aria-pressed="true" data-mode="stopwatch" id="tab-stopwatch">Stopwatch</button>
+      <button type="button" class="mode-tab" aria-pressed="false" data-mode="countdown" id="tab-countdown">Countdown</button>
     </div>
 
     <div class="display-wrapper">
-      <div class="time-display" aria-live="polite" aria-atomic="true">
+      <div class="time-display">
         <span class="time-main" id="time-main">00:00:00</span>
         <span class="time-ms" id="time-ms">000</span>
       </div>
+      <div id="timer-status" class="sr-only" aria-live="polite" aria-atomic="true" role="status"></div>
     </div>
 
     <div class="countdown-set-section hidden" id="countdown-set-section" aria-label="Set countdown duration">

@@ -93,3 +93,4 @@ Example:
  * @returns {string}
  */
 function formatTime(ms) {}
+```
