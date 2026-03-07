@@ -1,42 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Timer and Countdown</title>
-  <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Timer and Countdown</title>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <main class="timer-app" role="main" aria-label="Stopwatch and Countdown Timer">
-    <h1>Timer and Countdown</h1>
-
-    <div class="mode-tabs" role="tablist" aria-label="Timer mode">
-      <button type="button" class="mode-tab active" role="tab" aria-selected="true" data-mode="stopwatch" id="tab-stopwatch">Stopwatch</button>
-      <button type="button" class="mode-tab" role="tab" aria-selected="false" data-mode="countdown" id="tab-countdown">Countdown</button>
-    </div>
-
-    <div class="display-wrapper">
-      <div class="time-display" aria-live="polite" aria-atomic="true">
-        <span class="time-main" id="time-main">00:00:00</span>
-        <span class="time-ms" id="time-ms">000</span>
-      </div>
-    </div>
-
-    <div class="countdown-set-section hidden" id="countdown-set-section" aria-label="Set countdown duration">
-      <label for="input-hours">Hours</label>
-      <input type="number" id="input-hours" min="0" max="99" value="0" aria-label="Hours">
-      <label for="input-minutes">Minutes</label>
-      <input type="number" id="input-minutes" min="0" max="59" value="0" aria-label="Minutes">
-      <label for="input-seconds">Seconds</label>
-      <input type="number" id="input-seconds" min="0" max="59" value="0" aria-label="Seconds">
-      <button type="button" class="btn-set" id="btn-set" aria-label="Set countdown duration">Set</button>
-    </div>
-
-    <div class="button-row">
-      <button type="button" class="btn-primary" id="btn-primary" aria-label="Start timer">Start</button>
-      <button type="button" class="btn-clear" id="btn-clear" aria-label="Clear timer">Clear</button>
-    </div>
-  </main>
-  <script src="script.js"></script>
+<h1>Timer and Countdown</h1>
+<script src="script.js"></script>
 </body>
 </html>
