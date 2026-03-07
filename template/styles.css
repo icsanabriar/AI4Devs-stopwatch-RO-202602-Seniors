@@ -1,0 +1,155 @@
+/* Timer app - matches res/stopwatch.png */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: sans-serif;
+  background: #fff;
+}
+
+.timer-app {
+  text-align: center;
+  padding: 1.5rem;
+}
+
+.timer-app h1 {
+  margin: 0 0 1rem;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.mode-tabs {
+  display: flex;
+  gap: 0.25rem;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.mode-tab {
+  padding: 0.5rem 1rem;
+  border: 1px solid #555;
+  border-radius: 6px;
+  background: #f5f5f5;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.mode-tab:hover {
+  background: #eee;
+}
+
+.mode-tab.active {
+  background: #e0e6f8;
+  border-color: #333;
+}
+
+.display-wrapper {
+  margin-bottom: 1rem;
+}
+
+.time-display {
+  display: inline-block;
+  padding: 1rem 1.5rem;
+  border: 1px solid #555;
+  border-radius: 8px;
+  background: #e0e6f8;
+  min-width: 12rem;
+}
+
+.time-main {
+  font-size: 2rem;
+  font-weight: bold;
+  display: block;
+}
+
+.time-ms {
+  font-size: 1rem;
+  font-weight: bold;
+  display: block;
+  margin-top: 0.25rem;
+}
+
+.countdown-set-section {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.countdown-set-section.hidden {
+  display: none;
+}
+
+.countdown-set-section label {
+  font-weight: bold;
+}
+
+.countdown-set-section input {
+  width: 3.5rem;
+  padding: 0.25rem;
+  border: 1px solid #555;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.btn-set {
+  padding: 0.35rem 0.75rem;
+  border: 1px solid #555;
+  border-radius: 6px;
+  background: #ddd;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-set:hover {
+  background: #ccc;
+}
+
+.button-row {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  padding: 0.6rem 1.5rem;
+  border: 1px solid #333;
+  border-radius: 8px;
+  background: linear-gradient(to bottom, #7ed56f, #55c04a);
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(to bottom, #8ee07f, #65d05a);
+}
+
+.btn-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.btn-clear {
+  padding: 0.6rem 1.5rem;
+  border: 1px solid #333;
+  border-radius: 8px;
+  background: linear-gradient(to bottom, #ff7b7b, #e85555);
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-clear:hover {
+  background: linear-gradient(to bottom, #ff8b8b, #f06565);
+}

@@ -1,0 +1,70 @@
+---
+description: "Frontend rules for the string reverser project"
+globs: ["**/*"]
+---
+
+# Prompt Tracking Rule
+
+## Purpose
+Ensure full traceability of all prompts used during development.
+
+## Mandatory Rule
+
+Every prompt entered in the chat MUST be saved in:
+
+template/prompts.md
+
+This rule is NOT optional.
+
+## Requirements
+
+- If the file does not exist, create it.
+- Append each new prompt at the end of the file.
+- Do NOT overwrite previous prompts.
+- Preserve the original wording of the prompt, with one mandatory exception: **sensitive data MUST be redacted before storage** (e.g. secrets, credentials, personal identifying information).
+
+When redacting:
+
+- Use a marker such as `[REDACTED:<type>]`.
+- Record **redaction metadata** including:
+  - redaction reason
+  - redaction timestamp (ISO 8601)
+
+Implementations and audits MUST be able to detect when redaction occurred **without storing the secret**.  
+This can be done by including:
+
+- `redacted_flag`
+- `redaction_metadata` (reason + timestamp)
+
+## Metadata Required for Each Prompt
+
+Each stored prompt entry MUST include:
+
+- Timestamp (ISO 8601)
+- Agent used (e.g. `cursor-agent`, `gpt-5`, `gpt-5-thinking`, etc.)
+- Clear separator between prompts
+- Redaction metadata if redaction occurred
+
+## Format
+
+Each entry must follow this structure:
+
+---
+
+### Prompt - YYYY-MM-DDTHH:MM:SS
+
+**Agent:** <agent-name>
+
+**Redacted:** true | false
+
+(Optional when redacted)
+
+Redaction Metadata:
+- Reason: <reason>
+- Redaction Timestamp: YYYY-MM-DDTHH:MM:SS
+
+**Prompt Content**
+
+<original prompt text with redactions if required>
+
+---

@@ -1,0 +1,51 @@
+---
+description: Defines the functional and architectural scope of the stopwatch project
+globs: ["**/*.js","**/*.html"]
+alwaysApply: true
+---
+
+# Project Scope Rules
+
+## Purpose
+This project implements a **Stopwatch and Countdown Timer** web application using minimal frontend technologies.
+
+The implementation must follow these constraints:
+
+- The application must be implemented using **vanilla JavaScript**.
+- No external frameworks or heavy dependencies are allowed.
+- The project must remain **lightweight and easily testable**.
+
+## Allowed Files
+Core logic must remain limited to the following files:
+
+- `index.html` → UI structure
+- `script.js` → application logic
+
+## UI Reference
+The UI must follow the design defined in: res/stopwatch.png
+
+Behavior reference:
+https://www.online-stopwatch.com/
+
+## Feature Scope
+The application must include:
+
+### Stopwatch Mode
+- Start
+- Pause
+- Clear
+- Accurate time measurement
+
+### Countdown Mode
+- Set duration
+- Start countdown
+- Pause
+- Clear
+
+## Non-Goals
+The following are explicitly out of scope:
+- Frameworks (React, Vue, Angular)
+- Backend services
+- Build systems
+- Package managers
+- External UI libraries

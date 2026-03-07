@@ -1,0 +1,79 @@
+---
+description: Defines testing requirements and coverage standards
+globs: ["**/*.js"]
+alwaysApply: true
+---
+
+# Testing Rules
+
+Testing quality is critical because the project is evaluated by **CodeRabbitAI**.
+
+---
+
+# Test Location
+
+Tests must **not be placed in a global `/tests` folder**.
+
+Instead, tests must follow the **co-located testing pattern** and live **next to the source file they validate**.
+
+Example structure:
+```
+index.html
+script.js
+script.test.js
+```
+
+## Coverage Requirement
+The project must maintain:
+- Minimum 90% code coverage
+
+Coverage applies to:
+- Statements
+- Functions
+- Branches
+
+If coverage falls below 90%, additional tests must be created.
+
+## Test Scope
+Tests must cover:
+
+### Stopwatch Logic
+- start
+- pause
+- continue
+- clear
+- elapsed time calculations
+
+### Countdown Logic
+- initialization
+- countdown progression
+- pause behavior
+- continue behavior
+- completion at zero
+
+### Utility Functions
+- time formatting
+- duration normalization
+- validation logic
+
+## Test Quality
+Tests must follow best practices:
+- Independent
+- Deterministic
+- No reliance on real time delays when possible
+- Use mocked timestamps if required
+
+## Naming Convention
+Test names must clearly describe behavior.
+```
+Example:
+should_start_stopwatch_when_start_button_is_pressed
+should_reset_timer_to_zero
+should_stop_countdown_when_time_reaches_zero
+```
+
+## Failure Detection
+Tests must fail if:
+- Timer accuracy is incorrect
+- Invalid states occur
+- UI logic produces inconsistent state
