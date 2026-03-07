@@ -13,6 +13,7 @@
 
   var hasDocument = typeof document !== 'undefined';
   var hasRequestAnimationFrame = typeof requestAnimationFrame !== 'undefined';
+  /** requestAnimationFrame or setTimeout fallback (~16ms) for non-browser envs. @param {function(): void} cb - Callback. @returns {number} */
   var raf = hasRequestAnimationFrame ? requestAnimationFrame : function (cb) { return setTimeout(cb, 16); };
   var cancelRaf = typeof cancelAnimationFrame !== 'undefined' ? cancelAnimationFrame : clearTimeout;
 
@@ -121,6 +122,11 @@
     if (elements.timerStatus) elements.timerStatus.textContent = message;
   }
 
+  /** Last main display string (for tests when DOM absent). @type {string} */
+  var lastDisplayMain = '00:00:00';
+  /** Last ms display string (for tests when DOM absent). @type {string} */
+  var lastDisplayMs = '000';
+
   /**
    * Updates the on-screen time display (main + ms).
    * @param {number} ms - Time to show in milliseconds (non-negative for display).
@@ -128,8 +134,10 @@
    */
   function updateDisplay(ms) {
     var displayMs = Math.max(0, ms);
-    if (elements.timeMain) elements.timeMain.textContent = formatTimeMain(displayMs);
-    if (elements.timeMs) elements.timeMs.textContent = formatTimeMs(displayMs);
+    lastDisplayMain = formatTimeMain(displayMs);
+    lastDisplayMs = formatTimeMs(displayMs);
+    if (elements.timeMain) elements.timeMain.textContent = lastDisplayMain;
+    if (elements.timeMs) elements.timeMs.textContent = lastDisplayMs;
   }
 
   /**
@@ -139,7 +147,7 @@
   function getStopwatchElapsedMs() {
     if (state.stopwatchStartedAt === null) {
       return state.stopwatchPausedAt !== null
-        ? state.stopwatchPausedAt - 0
+        ? state.stopwatchPausedAt
         : state.stopwatchElapsedMs;
     }
     return state.stopwatchElapsedMs + (performance.now() - state.stopwatchStartedAt);
@@ -596,7 +604,11 @@
       stopTick: stopTick,
       /** Returns primary button label (Start | Pause | Continue) for current mode and state. @returns {string} */
       getPrimaryButtonLabel: getPrimaryButtonLabel,
-      /** @param {Object} s - Partial or full state to merge; overwrites provided fields. @returns {void} */
+      /** Last main display string (for tests when DOM absent). @returns {string} */
+      getDisplayMain: function () { return lastDisplayMain; },
+      /** Last ms display string (for tests when DOM absent). @returns {string} */
+      getDisplayMs: function () { return lastDisplayMs; },
+      /** Merges partial or full state into the singleton for tests; overwrites provided fields. @param {Object} s - Partial or full state. @returns {void} */
       setStateForTests: function (s) {
         state.stopwatchElapsedMs = s.stopwatchElapsedMs != null ? s.stopwatchElapsedMs : state.stopwatchElapsedMs;
         state.stopwatchStartedAt = s.stopwatchStartedAt !== undefined ? s.stopwatchStartedAt : state.stopwatchStartedAt;
@@ -609,11 +621,17 @@
       },
       /** Tick callback for display updates; exported for tests. @returns {void} */
       tick: tick,
-      /** @param {'idle'|'running'|'paused'|'completed'} s - Countdown state. @returns {void} */
-      setCountdownStateForTests: function (s) { countdownState = s; },
-      /** @param {'stopwatch'|'countdown'} m - Current mode. @returns {void} */
-      setCurrentModeForTests: function (m) { currentMode = m; },
-      /** @param {number} ms - Valid countdown duration in ms. @returns {void} */
+      /** Sets countdown state for tests (idle, running, paused, completed). @param {'idle'|'running'|'paused'|'completed'} s - Countdown state. @returns {void} */
+      setCountdownStateForTests: function (s) {
+        if (s !== 'idle' && s !== 'running' && s !== 'paused' && s !== 'completed') return;
+        countdownState = s;
+      },
+      /** Sets current mode for tests; only 'stopwatch' or 'countdown' accepted. @param {'stopwatch'|'countdown'} m - Current mode. @returns {void} */
+      setCurrentModeForTests: function (m) {
+        if (m !== 'stopwatch' && m !== 'countdown') return;
+        currentMode = m;
+      },
+      /** Sets countdown duration and resets to idle for tests; valid positive ms only. @param {number} ms - Countdown duration in ms. @returns {void} */
       setCountdownDurationMsForTests: function (ms) {
         if (!isValidCountdownDuration(ms)) return;
         state.countdownDurationMs = ms;
@@ -621,6 +639,12 @@
         state.countdownStartedAt = null;
         state.countdownPausedRemainingMs = null;
         countdownState = 'idle';
+      },
+      /** Sets mock HH/MM/SS inputs for tests so applySetCountdown can be exercised. @param {number} h - Hours. @param {number} m - Minutes. @param {number} s - Seconds. @returns {void} */
+      setCountdownInputsForTests: function (h, m, s) {
+        elements.inputHours = { value: String(h) };
+        elements.inputMinutes = { value: String(m) };
+        elements.inputSeconds = { value: String(s) };
       }
     };
   }

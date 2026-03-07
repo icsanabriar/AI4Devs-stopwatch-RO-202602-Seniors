@@ -80,7 +80,7 @@ Each stored prompt MUST include the following metadata:
 
 Entries must be appended using the following structure.
 
-Prompts must be stored as a **literal fenced block** so that markdown formatting inside the prompt is preserved.
+Prompts must be stored as a **literal fenced block** so that markdown formatting inside the prompt is preserved. Use an **outer fence at least one backtick longer** than any fenced code inside the prompt (e.g. if the prompt contains ``` use ```` for the outer fence) so embedded code blocks do not break the structure.
 
 ---
 
@@ -98,8 +98,10 @@ Prompts must be stored as a **literal fenced block** so that markdown formatting
 
 **Prompt Content**
 
-```text
+Use a quadruple backtick fence (````) when the prompt may contain triple-backtick code blocks; otherwise ```text is sufficient.
+
+````text
 <original prompt text with redactions if required>
-```
+````
 
 ---

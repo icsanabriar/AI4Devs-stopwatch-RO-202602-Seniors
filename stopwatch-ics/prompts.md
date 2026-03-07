@@ -660,3 +660,91 @@ The project is currently at 76.67% docstring coverage, failing the 80% requireme
 ```
 
 ---
+
+## Prompt - 2026-03-08T21:00:00
+
+**Agent:** cursor-agent
+
+**redacted_flag:** false
+
+**Prompt Content**
+
+```text
+Verify each finding against the current code and only fix it if needed.
+
+Inline comments:
+In @.cursor/rules/40-prompt-tracking.mdc:
+- Around line 79-103: The example in Prompt Content hardcodes a triple-backtick
+fence (```text) which breaks when prompts include fenced code (e.g.,
+stopwatch-ics/prompts.md); update the example in
+.cursor/rules/40-prompt-tracking.mdc to show a longer outer fence (e.g.,
+````text) and change the wording to instruct contributors to use an outer fence
+at least one backtick longer than any fence inside the prompt (or choose a
+specific quadruple fence in the example) so embedded fenced examples are
+preserved; reference the "Prompt Content" block and the canonical fence in the
+rule text and replace the hardcoded ```text with the safer longer-fence example.
+
+In `@stopwatch-ics/script.test.js`:
+- Around line 298-318: The test currently only asserts state and formatted
+values via api.formatTimeMain/api.formatTimeMs after calling api.tick(), which
+doesn't verify what was actually rendered; update the test
+"running_to_completed_displays_zero_and_clears_animationFrameId" to assert the
+rendered UI instead: after api.tick() query the DOM fixture or use the existing
+display accessor (e.g. a helper like getDisplayMain/getDisplayMs or
+document.querySelector for the timer main and ms elements) and assert their
+textContent equals '00:00:00' and '000' respectively, while keeping the existing
+state assertions (api.getCountdownState(), api.getState().animationFrameId,
+api.getState().countdownRemainingMs) to ensure both state and UI are verified.
+- Around line 361-369: The test currently uses the test-only helper
+setCountdownDurationMsForTests(), which bypasses parsing/validation and
+applySetCountdown; change the test to drive the real Set path by keeping
+api.setCurrentModeForTests('countdown'), then mock the user input value (the
+DOM/input value used by the Set flow) and invoke the real setter path (call the
+exported applySetCountdown() or trigger the same handler the Set button uses)
+instead of setCountdownDurationMsForTests(); finally assert via api.getState()
+and api.getCountdownState() that countdownDurationMs and countdownRemainingMs
+equal 125000 and state is 'idle' so parsing/validation and applySetCountdown()
+are exercised.
+
+---
+
+Nitpick comments:
+In @.cursor/rules/10-project-scope.mdc:
+- Around line 18-23: Update the "Allowed Files" rule (the Allowed Files section
+in the project-scope rule) so it matches the real surface area: it should still
+restrict core logic to the existing index.html and script.js entries but
+explicitly allow the feature's stylesheet and its colocated test files; change
+the prose and list items to include a CSS stylesheet (the feature's stylesheet)
+and the test files so future UI/style or test fixes are permitted alongside
+index.html and script.js.
+
+In @.cursor/rules/20-code-quality.mdc:
+- Around line 68-76: Update the JSDoc rule so it only applies to the real public
+API surface: change the configuration that currently has globs: ["**/*.js"] and
+alwaysApply: true to either restrict globs to source files (e.g. exclude test
+patterns) or add an allowlist for exported/public functions; specifically,
+exclude "*.test.js" (and other test/mocks) or implement logic that enforces
+JSDoc only for exported symbols (public functions/classes) instead of every
+function/callback so the rule in 20-code-quality.mdc only complains for public
+API surfaces.
+
+In `@stopwatch-ics/script.js`:
+- Around line 613-614: The test helper setCountdownStateForTests currently
+assigns any value to countdownState; add validation like setCurrentModeForTests
+does by checking the input s is one of the allowed strings
+('idle','running','paused','completed') and if not either throw an Error or log
+and no-op; update setCountdownStateForTests to perform this check before
+assigning countdownState to prevent invalid test states.
+
+In `@stopwatch-ics/script.test.js`:
+- Around line 373-383: The tests use the test-only setter
+setCurrentModeForTests() which bypasses production logic, so replace those calls
+with the public switchMode('countdown') and switchMode('stopwatch') to exercise
+real mode-change behavior and ensure set visibility is updated; update the two
+tests in describe('Set button visibility (logic)') to call switchMode(...)
+instead of setCurrentModeForTests(), then assert api.getCurrentMode() and
+api.getSetButtonVisibility() as before to catch regressions in switchMode()
+affecting visibility.
+```
+
+---

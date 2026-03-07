@@ -16,10 +16,12 @@ The implementation must follow these constraints:
 - The project must remain **lightweight and easily testable**.
 
 ## Allowed Files
-Core logic must remain limited to the following files:
+Core logic and related assets must remain limited to the following files:
 
-- `index.html` → UI structure
-- `script.js` → application logic
+- `stopwatch-ics/index.html` → UI structure
+- `stopwatch-ics/script.js` → application logic
+- `stopwatch-ics/styles.css` → feature stylesheet
+- `stopwatch-ics/script.test.js` → co-located unit tests (and other `*.test.js` in the feature folder)
 
 ## UI Reference
 The UI must follow the design defined in: res/stopwatch.png

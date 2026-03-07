@@ -1,7 +1,7 @@
 ---
 description: Enforces coding standards and documentation quality
-globs: ["**/*.js"]
-alwaysApply: true
+globs: ["stopwatch-ics/script.js"]
+alwaysApply: false
 ---
 
 # Code Quality Rules
@@ -58,16 +58,6 @@ Prefer:
 - deterministic outputs
 - clear responsibilities
 
-## Time Accuracy
-
-Timers must never rely solely on setInterval increments.
-
-Use timestamp-based calculations such as:
-  - `performance.now()`
-  - `Date.now()`
-
-to ensure accuracy.
-
 ## Error Handling
 
 Guard against invalid states such as:
@@ -77,7 +67,7 @@ Guard against invalid states such as:
 
 ## Documentation
 
-All functions must include **JSDoc style docstrings**.
+All **exported (public) functions** in the core application script must include **JSDoc style docstrings**. Test files (`*.test.js`) and mocks are excluded from this requirement.
 
 Docstrings must include:
 - Description

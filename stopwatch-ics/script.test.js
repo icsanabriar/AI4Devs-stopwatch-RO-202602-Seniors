@@ -311,10 +311,8 @@ describe('Timer', function () {
       assert.strictEqual(api.getCountdownState(), 'completed');
       assert.strictEqual(api.getState().animationFrameId, null);
       assert.strictEqual(api.getState().countdownRemainingMs, 0);
-      const main = api.formatTimeMain(api.getState().countdownRemainingMs);
-      const ms = api.formatTimeMs(api.getState().countdownRemainingMs);
-      assert.strictEqual(main, '00:00:00', 'display main should be 00:00:00');
-      assert.strictEqual(ms, '000', 'display ms should be 000');
+      assert.strictEqual(api.getDisplayMain(), '00:00:00', 'display main should be 00:00:00');
+      assert.strictEqual(api.getDisplayMs(), '000', 'display ms should be 000');
     });
   });
 
@@ -361,7 +359,8 @@ describe('Timer', function () {
   describe('Set correctly defines duration', function () {
     it('set_countdown_duration_updates_configured_and_remaining', function () {
       api.setCurrentModeForTests('countdown');
-      api.setCountdownDurationMsForTests(125000);
+      api.setCountdownInputsForTests(0, 2, 5);
+      api.applySetCountdown();
       const state = api.getState();
       assert.strictEqual(state.countdownDurationMs, 125000);
       assert.strictEqual(state.countdownRemainingMs, 125000);
@@ -372,12 +371,13 @@ describe('Timer', function () {
   /** Tests for Set button visible in countdown only, hidden in stopwatch. */
   describe('Set button visibility (logic)', function () {
     it('set_button_visible_only_in_countdown_mode', function () {
-      api.setCurrentModeForTests('countdown');
+      api.switchMode('countdown');
       assert.strictEqual(api.getCurrentMode(), 'countdown');
       assert.strictEqual(api.getSetButtonVisibility(), true, 'Set button should be visible in countdown mode');
     });
     it('set_button_hidden_in_stopwatch_mode', function () {
-      api.setCurrentModeForTests('stopwatch');
+      api.switchMode('countdown');
+      api.switchMode('stopwatch');
       assert.strictEqual(api.getCurrentMode(), 'stopwatch');
       assert.strictEqual(api.getSetButtonVisibility(), false, 'Set button should be hidden in stopwatch mode');
     });
