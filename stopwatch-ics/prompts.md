@@ -318,7 +318,6 @@ Now begin by analyzing the reference design and seed files, then implement the s
 
 ```text
 There is an scenario that is failing on the UI. When the user switch from Countdown to StopWatch mode the 'btn-primary' label is showing 'Continue' instead of 'Start'. Please fix it and add a unit test to validate it works.
-Also add this prompt following the @.cursor/rules/40-prompt-tracking.mdc rule.
 ```
 
 ---
@@ -332,8 +331,7 @@ Also add this prompt following the @.cursor/rules/40-prompt-tracking.mdc rule.
 **Prompt Content**
 
 ```text
-The folder template should be rename to stopwatch-ics and the folder template should be restore to the initial state of the git history. Please don't forget to add the prompt using the rule @.cursor/rules/40-prompt-tracking.mdc.
-Also add this prompt following the @.cursor/rules/40-prompt-tracking.mdc rule.
+The folder template should be rename to stopwatch-ics and the folder template should be restore to the initial state of the git history.
 ```
 
 ---
@@ -360,7 +358,6 @@ state.animationFrameId, updatePrimaryButtonLabel), and add a regression test
 that simulates the running → completed path verifying the displayed output is
 "00:00:00.000" (or equivalent zero format) and that animationFrameId is null and
 countdownState === 'completed'.
-Also add this prompt following the @.cursor/rules/40-prompt-tracking.mdc rule.
 ```
 
 ---
@@ -387,7 +384,6 @@ not collapse paused into a generic stopped state or null out
 stopwatchStartedAt), so the UI can follow the Start → Pause → Continue
 transitions correctly; apply the same change pattern referenced around lines
 237-240.
-Also add this prompt following @.cursor/rules/40-prompt-tracking.mdc
 ```
 
 ---
@@ -412,7 +408,6 @@ state.countdownRemainingMs otherwise); ensure the paused value is cleared or
 used consistently when the countdown is resumed (references: countdownState,
 state.countdownPausedRemainingMs, getCountdownRemainingMs, currentMode, mode,
 updateDisplay, state.countdownRemainingMs).
-Also add this prompt following @.cursor/rules/40-prompt-tracking.mdc
 ```
 
 ---
@@ -436,7 +431,6 @@ to clear pending animation frames; apply this so tests like "switchMode" and the
 "set button visibility" cases no longer inherit state from previous tests.
 Ensure you reference the module's exported setStateForTests() and stopTick()
 functions when implementing the beforeEach.
-Also add this prompt following @.cursor/rules/40-prompt-tracking.mdc
 ```
 
 ---
@@ -461,7 +455,6 @@ api.getPrimaryButtonLabel() returns the expected labels for each state (e.g.,
 continue) so the test fails if the Start → Pause → Continue wording regresses;
 place these asserts near the existing timestamp checks and keep using the same
 test name and api.* helper calls.
-Also add this prompt following @.cursor/rules/40-prompt-tracking.mdc
 ```
 
 ---
@@ -531,7 +524,6 @@ Example:
  * @returns {void}
  */
 ```
-```
 
 ---
 
@@ -554,7 +546,6 @@ descriptive TypeError or return without changing state; update switchMode (and
 any helper like currentMode) to reject invalid strings so currentMode cannot be
 set to an unsupported value and downstream logic won't assume countdown
 behavior.
-Also add this prompt following @.cursor/rules/40-prompt-tracking.mdc
 ```
 
 ---
@@ -579,7 +570,6 @@ and the three input elements exist (e.g., return early if elements is falsy or
 elements.inputHours/inputMinutes/inputSeconds are undefined), so callers in
 non-DOM environments fail gracefully instead of throwing; reference
 applySetCountdown and the cacheElements/elements symbols when making the change.
-Also add this prompt following @.cursor/rules/40-prompt-tracking.mdc
 ```
 
 ---
@@ -604,7 +594,6 @@ headings, code fences, or horizontal rules never get parsed as document
 structure; ensure the rule text and the example in
 .cursor/rules/40-prompt-tracking.mdc explicitly show the fenced block usage and
 include a note that redactions (if any) remain inside that literal block.
-Also add this prompt following @.cursor/rules/40-prompt-tracking.mdc
 ```
 
 ---
@@ -629,7 +618,44 @@ inactive timer; apply the same guard to the corresponding pause/resume/reset
 helpers (those manipulating state.stopwatchStartedAt, state.stopwatchPausedAt,
 calling startTick(), updatePrimaryButtonLabel(), etc.) and mirror the same check
 for the timer-side helpers so only the active mode can drive its RAF loop.
-Also add this prompt following @.cursor/rules/40-prompt-tracking.mdc
+```
+
+---
+
+## Prompt - 2026-03-08T00:00:00
+
+**Agent:** cursor-agent
+
+**Redacted:** false
+
+**Prompt Content**
+
+```text
+Verify each finding against the current code and only fix it if needed.
+
+In `@stopwatch-ics/script.test.js` around lines 349 - 357, The tests currently
+only assert mode changes via api.setCurrentModeForTests and api.getCurrentMode;
+update each test to also assert the Set button's actual visibility
+source-of-truth after changing mode — e.g., call the module's visibility
+accessor (like an api.isSetButtonVisible or api.getSetButtonVisibility if
+available) or query the DOM node (e.g., document.querySelector('#set-button')
+and check hidden/aria-hidden/classList) and assert true/false accordingly so the
+tests fail if the Set button does not show in countdown mode or hide in
+stopwatch mode.
+```
+
+---
+
+## Prompt - 2026-03-08T12:00:00
+
+**Agent:** cursor-agent
+
+**Redacted:** false
+
+**Prompt Content**
+
+```text
+The project is currently at 76.67% docstring coverage, failing the 80% requirement for CodeRabbitAI. Scan the codebase and identify public functions, classes, and exported modules that are missing JSDoc comments. Generate clear, concise JSDoc documentation for them, including @param, @returns, and a brief description of the logic. Ensure you maintain the existing coding style and prioritize files with the least coverage to push the total percentage above 95%. Last step please make a summary and report the docstring coverage.
 ```
 
 ---

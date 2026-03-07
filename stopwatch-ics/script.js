@@ -3,6 +3,11 @@
  * Manual test checklist at end of file.
  */
 
+/**
+ * Main application closure: holds state, elements, and all timer logic.
+ * Runs in browser (DOM) or Node (exports only for tests).
+ * @returns {void}
+ */
 (function () {
   'use strict';
 
@@ -525,30 +530,51 @@
   // Export for tests (when run in Node with module)
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
+      /** Formats milliseconds into HH:MM:SS. @param {number} ms - Duration in ms. @returns {string} */
       formatTimeMain: formatTimeMain,
+      /** Formats milliseconds fraction for .mmm display. @param {number} ms - Duration in ms. @returns {string} */
       formatTimeMs: formatTimeMs,
+      /** Pads a number with leading zeros. @param {number} n - Number. @param {number} length - Length. @returns {string} */
       pad: pad,
+      /** Parses HH, MM, SS into total milliseconds. @param {number} hours - Hours. @param {number} minutes - Minutes. @param {number} seconds - Seconds. @returns {number} */
       parseDurationMs: parseDurationMs,
+      /** Returns whether countdown duration is valid (positive). @param {number} ms - Duration in ms. @returns {boolean} */
       isValidCountdownDuration: isValidCountdownDuration,
       /** Returns the current timer state object (for tests). @returns {Object} State object. */
       getState: function () { return state; },
       /** Returns the current mode. @returns {'stopwatch'|'countdown'} */
       getCurrentMode: function () { return currentMode; },
+      /** Returns whether the Set button/section should be visible (countdown mode only). @returns {boolean} */
+      getSetButtonVisibility: function () { return currentMode === 'countdown'; },
       /** Returns the current countdown state. @returns {'idle'|'running'|'paused'|'completed'} */
       getCountdownState: function () { return countdownState; },
+      /** Gets current stopwatch elapsed time in ms (timestamp-based). @returns {number} */
       getStopwatchElapsedMs: getStopwatchElapsedMs,
+      /** Gets current countdown remaining time in ms (timestamp-based). @returns {number} */
       getCountdownRemainingMs: getCountdownRemainingMs,
+      /** Starts the stopwatch. No-op when mode is not stopwatch. @returns {void} */
       startStopwatch: startStopwatch,
+      /** Pauses the stopwatch and stores elapsed time. No-op when mode is not stopwatch. @returns {void} */
       pauseStopwatch: pauseStopwatch,
+      /** Resumes the stopwatch from paused time. No-op when mode is not stopwatch. @returns {void} */
       continueStopwatch: continueStopwatch,
+      /** Clears the stopwatch to zero. No-op when mode is not stopwatch. @returns {void} */
       clearStopwatch: clearStopwatch,
+      /** Starts the countdown. No-op when mode is not countdown. @returns {void} */
       startCountdown: startCountdown,
+      /** Pauses the countdown and stores remaining time. No-op when mode is not countdown. @returns {void} */
       pauseCountdown: pauseCountdown,
+      /** Resumes the countdown from paused time. No-op when mode is not countdown. @returns {void} */
       continueCountdown: continueCountdown,
+      /** Clears the countdown to configured duration. No-op when mode is not countdown. @returns {void} */
       clearCountdown: clearCountdown,
+      /** Applies countdown duration from HH/MM/SS inputs; resets to idle. @returns {void} */
       applySetCountdown: applySetCountdown,
+      /** Switches mode (stopwatch/countdown); pauses running timer, preserves per-mode values. @param {'stopwatch'|'countdown'} mode - Mode. @returns {void} */
       switchMode: switchMode,
+      /** Stops the tick loop. @returns {void} */
       stopTick: stopTick,
+      /** Returns primary button label (Start | Pause | Continue) for current mode and state. @returns {string} */
       getPrimaryButtonLabel: getPrimaryButtonLabel,
       /** @param {Object} s - Partial or full state to merge; overwrites provided fields. @returns {void} */
       setStateForTests: function (s) {

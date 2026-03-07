@@ -1,16 +1,23 @@
 /**
  * Unit tests for script.js timer logic.
  * Co-located next to script.js per .cursor/rules/30-testing.mdc.
- * Run: node --test template/script.test.js (from repo root)
+ * Run: node --test stopwatch-ics/script.test.js (from repo root)
  */
 
 const { describe, it, beforeEach } = require('node:test');
 const assert = require('node:assert');
 
-// Load script.js (runs IIFE, no document so init not run; exports API)
+/**
+ * Timer module API (script.js). In Node, IIFE runs but init is skipped (no document).
+ * @type {Object}
+ */
 const api = require('./script.js');
 
-/** Complete default state to fully reset singleton (overwrite all fields). */
+/**
+ * Complete default state to fully reset singleton (overwrite all fields).
+ * Used in beforeEach to isolate tests.
+ * @type {{ stopwatchElapsedMs: number, stopwatchStartedAt: null, stopwatchPausedAt: null, countdownDurationMs: number, countdownRemainingMs: number, countdownStartedAt: null, countdownPausedRemainingMs: null, animationFrameId: null }}
+ */
 const DEFAULT_STATE = {
   stopwatchElapsedMs: 0,
   stopwatchStartedAt: null,
@@ -22,7 +29,13 @@ const DEFAULT_STATE = {
   animationFrameId: null
 };
 
+/**
+ * Root test suite for the timer module (stopwatch + countdown logic and API).
+ */
 describe('Timer', function () {
+  /**
+   * Resets singleton state and mode before each test so tests do not inherit prior state.
+   */
   beforeEach(function () {
     api.stopTick();
     api.setStateForTests(DEFAULT_STATE);
@@ -30,6 +43,7 @@ describe('Timer', function () {
     api.setCurrentModeForTests('stopwatch');
   });
 
+  /** Tests for formatTimeMain (HH:MM:SS display). */
   describe('formatTimeMain', function () {
     it('should format zero as 00:00:00', function () {
       assert.strictEqual(api.formatTimeMain(0), '00:00:00');
@@ -44,6 +58,7 @@ describe('Timer', function () {
     });
   });
 
+  /** Tests for formatTimeMs (.mmm fraction). */
   describe('formatTimeMs', function () {
     it('should return three-digit milliseconds', function () {
       assert.strictEqual(api.formatTimeMs(0), '000');
@@ -53,6 +68,7 @@ describe('Timer', function () {
     });
   });
 
+  /** Tests for pad (leading zeros). */
   describe('pad', function () {
     it('should pad numbers to given length', function () {
       assert.strictEqual(api.pad(0, 2), '00');
@@ -61,6 +77,7 @@ describe('Timer', function () {
     });
   });
 
+  /** Tests for parseDurationMs (HH/MM/SS to ms). */
   describe('parseDurationMs', function () {
     it('should convert HH MM SS to milliseconds', function () {
       assert.strictEqual(api.parseDurationMs(0, 0, 0), 0);
@@ -77,6 +94,7 @@ describe('Timer', function () {
     });
   });
 
+  /** Tests for isValidCountdownDuration. */
   describe('isValidCountdownDuration', function () {
     it('should accept positive numbers', function () {
       assert.strictEqual(api.isValidCountdownDuration(1), true);
@@ -89,6 +107,7 @@ describe('Timer', function () {
     });
   });
 
+  /** Tests for stopwatch start/pause/continue/clear and elapsed time. */
   describe('Stopwatch', function () {
     it('should_start_stopwatch_when_start_is_called', function () {
       api.setStateForTests({
@@ -158,6 +177,7 @@ describe('Timer', function () {
     });
   });
 
+  /** Tests for countdown start/pause/continue/clear and zero completion. */
   describe('Countdown', function () {
     it('should_not_start_countdown_without_valid_duration', function () {
       api.setStateForTests({
@@ -275,6 +295,7 @@ describe('Timer', function () {
     });
   });
 
+  /** Regression: running to completed displays zero and clears RAF. */
   describe('Countdown running to completed transition (regression)', function () {
     it('running_to_completed_displays_zero_and_clears_animationFrameId', function () {
       api.setCurrentModeForTests('countdown');
@@ -297,6 +318,7 @@ describe('Timer', function () {
     });
   });
 
+  /** Tests for mode switching and Set button visibility. */
   describe('Mode and Set visibility', function () {
     it('should_switch_to_stopwatch_mode', function () {
       api.setCurrentModeForTests('countdown');
@@ -335,6 +357,7 @@ describe('Timer', function () {
     });
   });
 
+  /** Tests for Set countdown duration configuration. */
   describe('Set correctly defines duration', function () {
     it('set_countdown_duration_updates_configured_and_remaining', function () {
       api.setCurrentModeForTests('countdown');
@@ -346,17 +369,21 @@ describe('Timer', function () {
     });
   });
 
+  /** Tests for Set button visible in countdown only, hidden in stopwatch. */
   describe('Set button visibility (logic)', function () {
     it('set_button_visible_only_in_countdown_mode', function () {
       api.setCurrentModeForTests('countdown');
       assert.strictEqual(api.getCurrentMode(), 'countdown');
+      assert.strictEqual(api.getSetButtonVisibility(), true, 'Set button should be visible in countdown mode');
     });
     it('set_button_hidden_in_stopwatch_mode', function () {
       api.setCurrentModeForTests('stopwatch');
       assert.strictEqual(api.getCurrentMode(), 'stopwatch');
+      assert.strictEqual(api.getSetButtonVisibility(), false, 'Set button should be hidden in stopwatch mode');
     });
   });
 
+  /** Tests for primary button label Start → Pause → Continue. */
   describe('Primary button label behavior', function () {
     it('start_then_pause_then_continue_reflects_state', function () {
       api.setStateForTests({
