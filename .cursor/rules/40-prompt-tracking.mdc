@@ -1,5 +1,5 @@
 ---
-description: "Frontend rules for the stop watch project"
+description: "Frontend rules for the stopwatch and countdown project"
 globs: ["**/*"]
 alwaysApply: true
 ---

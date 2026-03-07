@@ -282,6 +282,7 @@
     }
     currentMode = mode;
     if (mode === 'stopwatch') {
+      state.stopwatchPausedAt = null;
       updateDisplay(getStopwatchElapsedMs());
     } else {
       var countdownDisplayMs = (countdownState === 'paused' && state.countdownPausedRemainingMs != null)
@@ -348,8 +349,9 @@
    */
   function continueStopwatch() {
     if (currentMode !== 'stopwatch') return;
+    if (state.stopwatchPausedAt === null) return;
     if (state.stopwatchStartedAt !== null) return;
-    state.stopwatchElapsedMs = state.stopwatchPausedAt !== null ? state.stopwatchPausedAt : state.stopwatchElapsedMs;
+    state.stopwatchElapsedMs = state.stopwatchPausedAt;
     state.stopwatchPausedAt = null;
     state.stopwatchStartedAt = performance.now();
     updatePrimaryButtonLabel();
@@ -449,6 +451,7 @@
    * @returns {void}
    */
   function applySetCountdown() {
+    if (currentMode !== 'countdown') return;
     if (!elements.inputHours || !elements.inputMinutes || !elements.inputSeconds) return;
     var h = parseInt(elements.inputHours.value, 10) || 0;
     var m = parseInt(elements.inputMinutes.value, 10) || 0;

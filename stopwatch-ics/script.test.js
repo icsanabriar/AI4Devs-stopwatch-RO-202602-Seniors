@@ -351,7 +351,7 @@ describe('Timer', function () {
       api.setCurrentModeForTests('countdown');
       api.switchMode('stopwatch');
       assert.strictEqual(api.getCurrentMode(), 'stopwatch');
-      assert.strictEqual(api.getPrimaryButtonLabel(), 'Continue', 'Primary button shows Continue when stopwatch has preserved elapsed time (Start → Pause → Continue)');
+      assert.strictEqual(api.getPrimaryButtonLabel(), 'Start', 'Primary button shows Start when switching to stopwatch with preserved elapsed time');
     });
   });
 
@@ -392,6 +392,7 @@ describe('Timer', function () {
         stopwatchPausedAt: null
       });
       api.setCurrentModeForTests('stopwatch');
+      assert.strictEqual(api.getPrimaryButtonLabel(), 'Start', 'idle state label');
       api.startStopwatch();
       assert.ok(api.getState().stopwatchStartedAt !== null);
       assert.strictEqual(api.getPrimaryButtonLabel(), 'Pause', 'label after start');

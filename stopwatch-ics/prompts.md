@@ -748,3 +748,84 @@ affecting visibility.
 ```
 
 ---
+
+## Prompt - 2026-03-07T00:00:00
+
+**Agent:** cursor-agent
+
+**redacted_flag:** false
+
+**Prompt Content**
+
+````text
+Verify each finding against the current code and only fix it if needed.
+
+Inline comments:
+
+In `@stopwatch-ics/index.html`:
+- Line 37: The primary button currently has a static aria-label ("Start timer")
+which will remain stale as its visible text toggles; remove the hard-coded
+aria-label from the button element with id "btn-primary" so the accessible name
+is derived from the visible text, or alternatively update the aria-label inside
+the same toggle/handler that changes the button text (the event listener that
+flips Start/Pause/Continue) so it always matches the current label.
+
+In `@stopwatch-ics/script.js`:
+- Around line 451-466: applySetCountdown currently runs even when the app is in
+stopwatch mode and can stop the stopwatch loop and overwrite visible data; add
+an early guard that returns immediately unless currentMode === 'countdown' (or
+otherwise ensure the function only runs when countdown mode is active). Locate
+applySetCountdown and add the check before any state changes or calling
+stopTick/updateDisplay, so that functions like stopTick(),
+state.countdownDurationMs, state.countdownRemainingMs, countdownState,
+updateDisplay, and updatePrimaryButtonLabel only execute when the mode is
+countdown.
+- Around line 349-357: continueStopwatch() should only resume when there is an
+actual paused state; add a guard that returns early if state.stopwatchPausedAt
+is null (i.e., nothing is paused) so you don't treat an idle start as a resume.
+In the continueStopwatch function, check state.stopwatchPausedAt === null and
+return before mutating state.stopwatchElapsedMs, state.stopwatchPausedAt,
+state.stopwatchStartedAt and before calling updatePrimaryButtonLabel(),
+updateTimerStatus('Stopwatch resumed') and startTick().
+
+In `@stopwatch-ics/script.test.js`:
+- Around line 345-355: The test
+"should_show_Continue_when_switching_to_stopwatch_with_preserved_elapsed" is
+asserting the old buggy label; update the assertion to expect 'Start' instead of
+'Continue' so the spec matches the PR intent. Locate the test block that calls
+api.setStateForTests, api.setCurrentModeForTests('countdown'),
+api.switchMode('stopwatch') and replace the
+assert.strictEqual(api.getPrimaryButtonLabel(), 'Continue', ...) with an
+assertion that the primary button label equals 'Start' while leaving the rest of
+the setup unchanged.
+
+---
+
+Duplicate comments:
+In @.cursor/rules/40-prompt-tracking.mdc:
+- Line 2: Update the description field in .cursor/rules/40-prompt-tracking.mdc
+(the "description" key) to correctly name the project and include both halves of
+the app; replace the current "Frontend rules for the stop watch project" with a
+concise phrase such as "Frontend rules for the stopwatch and countdown project"
+(or equivalent) so it no longer reads like a copied label and mentions both
+stopwatch and countdown functionality.
+
+In `@stopwatch-ics/script.test.js`:
+- Around line 388-405: In the test
+start_then_pause_then_continue_reflects_state, add an assertion for the
+idle-state label before calling api.startStopwatch(): call
+api.setStateForTests(...) and api.setCurrentModeForTests('stopwatch') as already
+done, then assert that api.getPrimaryButtonLabel() === 'Start' before invoking
+api.startStopwatch(); this ensures the initial label is verified and prevents
+regressions in the idle-state label.
+
+---
+
+Nitpick comments:
+In @.cursor/rules/10-project-scope.mdc:
+- Around line 35-46: Update the "Stopwatch Mode" and "Countdown Mode" sections
+to include the missing Continue/resume transition so the scope matches
+implemented behavior and tests: add a "Continue" (or "Resume") bullet under both
+sections and ensure phrasing mirrors existing actions (e.g., "Pause", "Clear")
+to make Clear expectations consistent with the PR objectives and test suite.
+````
