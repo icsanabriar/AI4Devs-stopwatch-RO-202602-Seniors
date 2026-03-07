@@ -1,6 +1,8 @@
+# Prompts
+
 ---
 
-### Prompt - 2026-03-06T00:00:00
+## Prompt - 2026-03-06T00:00:00
 
 **Agent:** cursor-agent
 
@@ -304,7 +306,7 @@ Now begin by analyzing the reference design and seed files, then implement the s
 
 ---
 
-### Prompt - 2026-03-07T00:00:00
+## Prompt - 2026-03-07T00:00:00 — btn-primary label fix
 
 **Agent:** cursor-agent
 
@@ -317,9 +319,7 @@ Also add this prompt following the @.cursor/rules/40-prompt-tracking.mdc rule.
 
 ---
 
----
-
-### Prompt - 2026-03-07T00:00:00
+## Prompt - 2026-03-07T00:00:00 — rename template to stopwatch-ics
 
 **Agent:** cursor-agent
 
@@ -332,7 +332,7 @@ Also add this prompt following the @.cursor/rules/40-prompt-tracking.mdc rule.
 
 ---
 
-### Prompt - 2026-03-07T13:00:00
+## Prompt - 2026-03-07T13:00:00
 
 **Agent:** cursor-agent
 
@@ -357,7 +357,7 @@ Also add this prompt following the @.cursor/rules/40-prompt-tracking.mdc rule.
 
 ---
 
-### Prompt - 2026-03-07T14:00:00
+## Prompt - 2026-03-07T14:00:00
 
 **Agent:** cursor-agent
 
@@ -382,7 +382,7 @@ Also add this prompt following @.cursor/rules/40-prompt-tracking.mdc
 
 ---
 
-### Prompt - 2026-03-07T15:00:00
+## Prompt - 2026-03-07T15:00:00
 
 **Agent:** cursor-agent
 
@@ -405,7 +405,7 @@ Also add this prompt following @.cursor/rules/40-prompt-tracking.mdc
 
 ---
 
-### Prompt - 2026-03-07T16:00:00
+## Prompt - 2026-03-07T16:00:00
 
 **Agent:** cursor-agent
 
@@ -427,7 +427,7 @@ Also add this prompt following @.cursor/rules/40-prompt-tracking.mdc
 
 ---
 
-### Prompt - 2026-03-07T17:00:00
+## Prompt - 2026-03-07T17:00:00
 
 **Agent:** cursor-agent
 
@@ -450,7 +450,7 @@ Also add this prompt following @.cursor/rules/40-prompt-tracking.mdc
 
 ---
 
-### Prompt - 2026-03-07T18:00:00
+## Prompt - 2026-03-07T18:00:00
 
 **Agent:** cursor-agent
 
@@ -514,5 +514,50 @@ Example:
  * @returns {void}
  */
 ```
+
+---
+
+## Prompt - 2026-03-07T19:00:00
+
+**Agent:** cursor-agent
+
+**Redacted:** false
+
+**Prompt Content**
+
+Verify each finding against the current code and only fix it if needed.
+
+In `@stopwatch-ics/script.js` around lines 244 - 245, Add an explicit guard in the
+exported switchMode function to validate the incoming mode before mutating
+currentMode: check that mode is one of the supported values (e.g., "countdown",
+"stopwatch" or whatever validMode set you use), and if not either throw a
+descriptive TypeError or return without changing state; update switchMode (and
+any helper like currentMode) to reject invalid strings so currentMode cannot be
+set to an unsupported value and downstream logic won't assume countdown
+behavior.
+Also add this prompt following @.cursor/rules/40-prompt-tracking.mdc
+
+---
+
+## Prompt - 2026-03-07T20:00:00
+
+**Agent:** cursor-agent
+
+**Redacted:** false
+
+**Prompt Content**
+
+Verify each finding against the current code and only fix it if needed.
+
+In `@stopwatch-ics/script.js` around lines 401 - 405, The applySetCountdown
+function reads DOM inputs unguarded
+(elements.inputHours/inputMinutes/inputSeconds), causing throws when run in
+Node/tests before cacheElements() populates them; add a defensive guard at the
+top of applySetCountdown that checks cacheElements() has run or that elements
+and the three input elements exist (e.g., return early if elements is falsy or
+elements.inputHours/inputMinutes/inputSeconds are undefined), so callers in
+non-DOM environments fail gracefully instead of throwing; reference
+applySetCountdown and the cacheElements/elements symbols when making the change.
+Also add this prompt following @.cursor/rules/40-prompt-tracking.mdc
 
 ---

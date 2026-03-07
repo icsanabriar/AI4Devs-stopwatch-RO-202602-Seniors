@@ -197,8 +197,8 @@
 
   /**
    * Returns the primary button label for current mode and state (for testing).
-   * In Stopwatch mode when not running we always show "Start" so that switching
-   * from Countdown to Stopwatch shows "Start" (not "Continue").
+   * Stopwatch: running -> 'Pause'; paused or preserved elapsed -> 'Continue'; fresh (zero elapsed) -> 'Start'.
+   * Countdown: running -> 'Pause'; paused -> 'Continue'; idle or completed -> 'Start'.
    * @returns {string} 'Start' | 'Pause' | 'Continue'
    */
   function getPrimaryButtonLabel() {
@@ -242,6 +242,7 @@
    * @returns {void}
    */
   function switchMode(mode) {
+    if (mode !== 'stopwatch' && mode !== 'countdown') return;
     if (mode === currentMode) return;
     stopTick();
     if (currentMode === 'stopwatch') {
@@ -396,9 +397,11 @@
 
   /**
    * Applies the countdown duration from the HH/MM/SS inputs and resets countdown to idle.
+   * No-op in non-DOM environments when cacheElements has not run (e.g. Node tests).
    * @returns {void}
    */
   function applySetCountdown() {
+    if (!elements.inputHours || !elements.inputMinutes || !elements.inputSeconds) return;
     var h = parseInt(elements.inputHours.value, 10) || 0;
     var m = parseInt(elements.inputMinutes.value, 10) || 0;
     var s = parseInt(elements.inputSeconds.value, 10) || 0;
@@ -511,8 +514,11 @@
       pad: pad,
       parseDurationMs: parseDurationMs,
       isValidCountdownDuration: isValidCountdownDuration,
+      /** Returns the current timer state object (for tests). @returns {Object} State object. */
       getState: function () { return state; },
+      /** Returns the current mode. @returns {'stopwatch'|'countdown'} */
       getCurrentMode: function () { return currentMode; },
+      /** Returns the current countdown state. @returns {'idle'|'running'|'paused'|'completed'} */
       getCountdownState: function () { return countdownState; },
       getStopwatchElapsedMs: getStopwatchElapsedMs,
       getCountdownRemainingMs: getCountdownRemainingMs,
@@ -539,6 +545,7 @@
         state.countdownPausedRemainingMs = s.countdownPausedRemainingMs !== undefined ? s.countdownPausedRemainingMs : state.countdownPausedRemainingMs;
         if (s.animationFrameId !== undefined) state.animationFrameId = s.animationFrameId;
       },
+      /** Tick callback for display updates; exported for tests. @returns {void} */
       tick: tick,
       /** @param {'idle'|'running'|'paused'|'completed'} s - Countdown state. @returns {void} */
       setCountdownStateForTests: function (s) { countdownState = s; },

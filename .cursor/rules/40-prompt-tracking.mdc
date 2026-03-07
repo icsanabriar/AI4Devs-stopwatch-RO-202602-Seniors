@@ -51,7 +51,7 @@ Each entry must follow this structure:
 
 ---
 
-### Prompt - YYYY-MM-DDTHH:MM:SS
+## Prompt - YYYY-MM-DDTHH:MM:SS
 
 **Agent:** <agent-name>
 
