@@ -1,0 +1,86 @@
+---
+description: Enforces coding standards and documentation quality
+globs: ["stopwatch-ics/script.js"]
+alwaysApply: false
+---
+
+# Code Quality Rules
+
+This repository is evaluated by **CodeRabbitAI**, therefore the following standards are mandatory.
+
+## General Principles
+
+All code must follow:
+- Readability
+- Maintainability
+- Predictability
+- Minimal complexity
+
+Favor **simple deterministic logic** over clever implementations.
+
+## Structure
+
+- `index.html`
+  - Contains semantic HTML structure.
+  - Uses accessible elements (e.g., `<button>` for actions).
+
+- `script.js`
+  - Contains all timer logic.
+  - Must avoid unnecessary globals.
+  - Prefer a **single state object** for timer state.
+
+## Timing Accuracy
+
+Timers must not rely solely on `setInterval`.
+
+Use a **timestamp-based approach**, for example:
+- `performance.now()`
+- delta calculation for elapsed time
+
+This ensures correct timing during tab throttling or pauses.
+
+## Naming
+
+Use descriptive names:
+- `startStopwatch`
+- `pauseTimer`
+- `clearCountdown`
+- `formatTime`
+
+Avoid abbreviations unless obvious.
+
+## Function Size
+
+Functions should be small and focused.
+
+Prefer:
+- pure functions
+- deterministic outputs
+- clear responsibilities
+
+## Error Handling
+
+Guard against invalid states such as:
+- Starting multiple timers simultaneously
+- Invalid countdown values
+- Negative durations
+
+## Documentation
+
+All **exported (public) functions** in the core application script must include **JSDoc style docstrings**. Test files (`*.test.js`) and mocks are excluded from this requirement.
+
+Docstrings must include:
+- Description
+- Parameters
+- Return values (if applicable)
+
+Example:
+
+```javascript
+/**
+ * Formats a duration in milliseconds into MM:SS.hh format.
+ * @param {number} ms
+ * @returns {string}
+ */
+function formatTime(ms) {}
+```

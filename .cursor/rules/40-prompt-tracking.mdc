@@ -1,0 +1,107 @@
+---
+description: "Frontend rules for the stopwatch and countdown project"
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# Prompt Tracking Rule
+
+## Purpose
+
+Ensure **complete traceability of all prompts** used by the AI agent during development.
+
+This rule guarantees that every interaction with the AI agent can be audited, reproduced, and reviewed.
+
+---
+
+# Mandatory Execution Rule
+
+For **every prompt received by the agent**, the agent MUST perform the following steps **before producing the final answer or modifying any file**:
+
+1. Record the prompt in the file:
+
+```text
+  stopwatch-ics/prompts.md
+```
+
+2. If the file does not exist, **create it automatically**.
+
+3. Append the prompt entry **at the end of the file**.
+
+4. Never modify or overwrite previous prompt entries.
+
+Failure to record the prompt **violates this rule**.
+
+---
+
+# Storage Requirements
+
+The prompt entry must preserve the **original wording** of the prompt.
+
+The only allowed modification is **redaction of sensitive data**.
+
+Sensitive information includes:
+
+- API keys
+- tokens
+- passwords
+- credentials
+- personal identifiable information
+- secrets
+
+---
+
+# Redaction Rules
+
+If sensitive information appears in a prompt:
+
+1. Replace it with a marker:
+
+```text
+  [REDACTED:<type>]
+```
+
+2. Record **redaction_metadata** (reason and timestamp in ISO 8601). Set **redacted_flag** to true when redaction occurs.
+
+---
+
+# Required Metadata
+
+Each stored prompt MUST include the following metadata:
+
+- **Timestamp** (ISO 8601)
+- **Agent name** (e.g. `cursor-agent`, `gpt-5`, `gpt-5-thinking`)
+- **redacted_flag** (true | false)
+- **redaction_metadata** (if applicable; contains reason and timestamp)
+
+---
+
+# File Format
+
+Entries must be appended using the following structure.
+
+Prompts must be stored as a **literal fenced block** so that markdown formatting inside the prompt is preserved. Use an **outer fence at least one backtick longer** than any fenced code inside the prompt (e.g. if the prompt contains ``` use ```` for the outer fence) so embedded code blocks do not break the structure.
+
+---
+
+## Prompt - YYYY-MM-DDTHH:MM:SS
+
+**Agent:** <agent-name>
+
+**redacted_flag:** true | false
+
+(Optional when redacted)
+
+**redaction_metadata:**
+- reason: <reason>
+- timestamp: YYYY-MM-DDTHH:MM:SS
+
+**Prompt Content**
+
+Use a quadruple backtick fence (````) when the prompt may contain triple-backtick code blocks; otherwise ```text is sufficient.
+
+````text
+<original prompt text with redactions if required>
+````
+
+---

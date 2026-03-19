@@ -1,4 +1,5 @@
 # Ignore in all directories
+.vscode
 **/.DS_Store
 **/.env
 **/.env.example
